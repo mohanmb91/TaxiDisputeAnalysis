@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,15 +19,28 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class NycTaxiTwitter {
-	static long minId = Long.MAX_VALUE;
+public class NycTwitterSource implements Source<NycTaxiTweetModel>{
+	
+	static long minId ;
 	static List<NycTaxiTweetModel> nycTaxiTweet = new ArrayList<NycTaxiTweetModel>();
-	static String positiveWordFile =System.getProperty("user.home")+"/documents/Bigdata/data-science/src/main/java/edu/csula/datascience/sentimentalAnalysis/positive-words.txt";
-	static String negativeWordFile =System.getProperty("user.home")+"/documents/Bigdata/data-science/src/main/java/edu/csula/datascience/sentimentalAnalysis/negative-words.txt";
+	static String positiveWordFile ;
+	static String negativeWordFile ;
+	
+	public NycTwitterSource(){
+		minId = Long.MAX_VALUE;
+		positiveWordFile ="C:\\Users\\FEBIELGIVA\\Documents\\sentimentalWords\\positive-words.txt";
+		negativeWordFile ="C:\\Users\\FEBIELGIVA\\Documents\\sentimentalWords\\negative-words.txt";
+	}
+	
+	
+	@Override
+	public boolean hasNext() {
+		return false;
+	}
 
-
-	public static void main(String[] args) throws TwitterException, FileNotFoundException, IOException{
-
+	
+	@Override
+	public Collection<NycTaxiTweetModel> next() {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
 		.setOAuthConsumerKey(ConstantKeys.consumer_Key)
@@ -39,11 +52,15 @@ public class NycTaxiTwitter {
 		twitter4j.Twitter twitter = tf.getInstance();
 
 		Set<String> negativeWordsSet = new HashSet<String>();
-		negativeWordsSet = fetchTheNegativeWords();
 		Set<String> positiveWordsSet = new HashSet<String>();
-		positiveWordsSet = fetchThePositiveWords();
 
-		//List<NycTaxiModel> nycTaxi = new ArrayList<NycTaxiModel>();
+		try {
+			negativeWordsSet = fetchTheNegativeWords();
+			positiveWordsSet = fetchThePositiveWords();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 
 		try {
 			Query query = new Query("@nyctaxi");
@@ -54,12 +71,12 @@ public class NycTaxiTwitter {
 				System.out.println();
 				System.out.println("@" + tweet.getUser().getScreenName() + " - " + tweet.getText() );
 				analysisTweets(positiveWordsSet,negativeWordsSet,tweet.getText(),tweet.getCreatedAt().toString());
-				System.out.println(tweet.getInReplyToStatusId());
+				System.out.println(tweet.getId());
 				System.out.println(tweet.getCreatedAt());
-
+				
 			}
 		}
-		catch (TwitterException te) {
+		catch (TwitterException | IOException te) {
 			te.printStackTrace();
 			System.out.println("Failed to search tweets: " + te.getMessage());
 			System.exit(-1);
@@ -71,7 +88,11 @@ public class NycTaxiTwitter {
 		}
 
 		System.out.println("done");
+		return nycTaxiTweet;
 	}
+	
+	
+	
 	private static Set<String> fetchTheNegativeWords() throws FileNotFoundException, IOException {
 		Set<String> set = new HashSet<String>(); 
 		try(BufferedReader br = new BufferedReader(new FileReader(negativeWordFile))) {
@@ -148,8 +169,7 @@ public class NycTaxiTwitter {
 
 			}
 
-				
-
-
 	}
+
 }
+

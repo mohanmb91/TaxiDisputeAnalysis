@@ -15,6 +15,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import au.com.bytecode.opencsv.CSVReader;
 import model.NycTaxiModel;
 
 public class Parsing implements Source<NycTaxiModel>{
@@ -27,8 +28,8 @@ public class Parsing implements Source<NycTaxiModel>{
 	@Override
 	public boolean hasNext() {
 		try {
-			CSVParser parser = new CSVParser(new FileReader(this.fileName), CSVFormat.DEFAULT.withHeader());
-			if(parser.getRecordNumber() > 0){
+			CSVReader parser = new CSVReader(new FileReader(this.fileName));
+			if(parser.readNext() != null){
 				return true;
 			}
 		} catch (FileNotFoundException e) {
