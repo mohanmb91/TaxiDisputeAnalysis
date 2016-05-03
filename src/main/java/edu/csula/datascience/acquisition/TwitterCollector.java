@@ -22,7 +22,7 @@ public class TwitterCollector implements Collector<Status, Status> {
         // establish database connection to MongoDB
         mongoClient = new MongoClient();
         // select `bd-example` as testing database
-        database = mongoClient.getDatabase("bd-example");
+        database = mongoClient.getDatabase("bigdata");
 
         // select collection by name `tweets`
         collection = database.getCollection("tweets");

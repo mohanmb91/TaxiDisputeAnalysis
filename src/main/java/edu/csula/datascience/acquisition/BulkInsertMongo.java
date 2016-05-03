@@ -11,17 +11,21 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import model.NycTaxiModel;
+import model.NycTaxiTweetModel;
 
 public class BulkInsertMongo {
 	static MongoClient mongoClient;
 	static MongoDatabase database;
 	static MongoCollection<Document> collection;
+	static MongoCollection<Document> collectionforTweet;
 
 	public BulkInsertMongo(){
 	mongoClient = new MongoClient();
 	//mongoClient.dropDatabase("bigdata");
 	database = mongoClient.getDatabase("bigdata");
 	collection = database.getCollection("data");
+	collectionforTweet = database.getCollection("datatweet");
+
 	}
 	
 	public void insertMongo(Collection<NycTaxiModel> data){
@@ -51,5 +55,19 @@ public class BulkInsertMongo {
 		collection.insertMany(documents);
 		mongoClient.close();
 	}
+	public void insertTweetMongo(Collection<NycTaxiTweetModel> data) {
+		List<Document> documents = data.stream()
+				.map(item -> new Document()
+						.append("tweet", item.getTweet())
+						.append("positiveNegativeIndicator",Boolean.toString(item.isPositiveNegativeIndicator()))
+						.append("words", item.getWords())
+						.append("tweetDate", item.getTweetDate())
+						.append("associatedLinks", item.getAssociatedLinks()))		
+				.collect(Collectors.toList());
+		collectionforTweet.insertMany(documents);
+		mongoClient.close();
+		
+	}
+	
 	
 }
