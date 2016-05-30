@@ -50,7 +50,69 @@ public class NycTaxiDisputePrediction implements  Collector<NycTaxiModel,NycTaxi
 		data = nyc.mungee(data);
 		nyc.save(data);
 	}
-
+	public String mungeeForPaymentType(String payment){
+		try{
+			if(Integer.parseInt(payment) == 4 ){
+				return "1";
+			}else{
+				return "0";
+			}
+			}
+			catch(NumberFormatException e){
+				if(payment.equals("DIS")){
+					return "1";
+				}else{
+					return "0";
+				}
+			}
+	}
+	public String mungeeForStoreAndFrwd(String streAndFrwd){
+		if(streAndFrwd.equals("Y")){
+			return "1";
+		}
+		else if(streAndFrwd.equals("N")){
+			return "0";
+		}
+		return "0";
+	}
+	public String mungeeVendorId(String vendorId){
+		if(vendorId.equals("CMT")){
+			return "1";
+		}
+	    else if(vendorId.equals("VTS")){
+	    	return "2";
+	    }
+		return "1";
+	}
+	public NycTaxiModel mungeeOneRecord(NycTaxiModel eachTaxiModel) {
+		try{
+			if(Integer.parseInt(eachTaxiModel.getPayment_type()) == 4 ){
+				eachTaxiModel.setPayment_type("1");
+			}else{
+				eachTaxiModel.setPayment_type("0");
+			}
+			}
+			catch(NumberFormatException e){
+				if(eachTaxiModel.getPayment_type().equals("DIS")){
+					eachTaxiModel.setPayment_type("1");
+				}else{
+					eachTaxiModel.setPayment_type("0");
+				}
+			}
+			if(eachTaxiModel.getStore_and_fwd_flag().equals("Y")){
+				eachTaxiModel.setStore_and_fwd_flag("1");
+			}
+			else if(eachTaxiModel.getStore_and_fwd_flag().equals("N")){
+				eachTaxiModel.setStore_and_fwd_flag("0");
+			}
+		    if(eachTaxiModel.getVendor_id().equals("CMT")){
+				eachTaxiModel.setVendor_id("1");
+			}
+		    else if(eachTaxiModel.getVendor_id().equals("VTS")){
+		    	eachTaxiModel.setVendor_id("2");
+		    }
+		return eachTaxiModel;
+	}
 	@Override
 	public Collection<NycTaxiModel> mungee(Collection<NycTaxiModel> src) {
 		for(NycTaxiModel eachTaxiModel: src){
@@ -79,9 +141,6 @@ public class NycTaxiDisputePrediction implements  Collector<NycTaxiModel,NycTaxi
 			}
 		    else if(eachTaxiModel.getVendor_id().equals("VTS")){
 		    	eachTaxiModel.setVendor_id("2");
-		    }
-		    else{
-		    	System.out.println(eachTaxiModel.getVendor_id());
 		    }
 			
 		}
