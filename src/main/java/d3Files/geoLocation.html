@@ -1,0 +1,41 @@
+<html>
+<title>
+	Geo Location For Pick up location
+</title>
+<button type="button" onclick="myFunction()">Try it</button>
+<script src="http://code.jquery.com/jquery-3.0.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: "http://localhost:8888/client/GetLatLonBigData.php",
+      success: function(data) {
+      	var json = {};
+      	 $.each(data, function(index, element) {
+       		
+			json[element.id] = [parseFloat(element.Dropoff_longitude),parseFloat(element.Dropoff_latitude)];
+			//alert(JSON.stringify(json));
+        });
+      	 alert("for loop completed");
+        $.ajax({
+			    type : "POST",
+			    url : "http://localhost:8888/client/writeJson.php",
+			    data : {
+			        json : JSON.stringify(json)
+			    }
+			}); 
+      }
+    });
+   
+});
+
+</script>
+	<body>
+		<div class="the-return">
+  [HTML is replaced when successful.]
+</div>
+
+	</body>
+</html>
