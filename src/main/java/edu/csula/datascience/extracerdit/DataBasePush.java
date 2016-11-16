@@ -1,4 +1,4 @@
-package edu.csula.datascience.extracredit;
+package edu.csula.datascience.extracerdit;
 
 
 import com.google.common.collect.Lists;

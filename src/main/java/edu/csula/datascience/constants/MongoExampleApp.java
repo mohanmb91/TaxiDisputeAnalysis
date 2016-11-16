@@ -1,4 +1,4 @@
-package edu.csula.datascience.examples;
+package edu.csula.datascience.constants;
 
 import com.google.common.collect.Lists;
 import com.mongodb.Block;

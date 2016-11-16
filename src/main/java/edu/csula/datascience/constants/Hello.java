@@ -1,4 +1,4 @@
-package edu.csula.datascience.examples;
+package edu.csula.datascience.constants;
 
 /**
  * A simple main program for testing sanity

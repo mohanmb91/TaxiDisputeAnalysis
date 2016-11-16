@@ -1,4 +1,4 @@
-package edu.csula.datascience.examples;
+package edu.csula.datascience.constants;
 
 /**
  * Created by eric on 4/10/16.
